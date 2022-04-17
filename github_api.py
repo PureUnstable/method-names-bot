@@ -6,12 +6,10 @@ from github import Github, RateLimitExceededException
 from github.Repository import Repository
 # from github.ContentFile import ContentFile
 # from github.PaginatedList import PaginatedList
-from . import secrets, regex_utils
-
+import secrets, regex_utils
 
 
 g = Github(secrets.GITHUB_PERSONAL_ACCESS_TOKEN)
-
 
 
 def wait_for_rate_limit_reset() -> None:
@@ -55,6 +53,7 @@ def get_repo(repo_name: str) -> Repository:
         wait_for_rate_limit_reset()
         return get_repo(repo_name)
 
+
 def is_folder_allow_listed(folder_path: str) -> bool:
     return (not folder_path.startswith(".") and folder_path not in ["ci", "cd", "doc", "docs", "documentation", "images", "git", "gradle", "maven", "idea", "etc", "test", "javadoc", "resources", "scripts"])
 
@@ -74,9 +73,12 @@ def get_all_long_method_names_from_c_like_repo(repo_name: str)  -> List[tuple]:
             else:
                 if file_content.name.endswith(".java"):
                     print(file_content.name)
-                    methodNames = regex_utils.get_long_method_names_c_like(file_content.decoded_content.decode("utf-8"))
-                    if (len(methodNames) > 0):
-                        for method_name in methodNames:
+                    method_names = regex_utils.get_long_method_names_c_like(file_content.decoded_content.decode("utf-8"))
+                    if (len(method_names) > 0):
+                        print("\n\n*******************************************************************************************")
+                        print(method_names)
+                        print("*******************************************************************************************\n\n")
+                        for method_name in method_names:
                             all_long_method_names_their_files.append((method_name, file_content.name))
                         # tweet_method_names(methodNames, repo_name, file_content.name)
     except Exception as e:

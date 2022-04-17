@@ -3,12 +3,14 @@ from typing import List
 import time
 import tweepy
 from tweepy import Tweet
-from . import secrets, constants
+import secrets, constants
+
 
 # Twitter API
 auth = tweepy.OAuthHandler(secrets.TWITTER_API_KEY, secrets.TWITTER_API_KEY_SECRET)
 auth.set_access_token(secrets.TWITTER_ACCESS_TOKEN, secrets.TWITTER_ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
+
 
 def tweet_method_name(method_name: str) -> Tweet:
     last_tweet = None
@@ -38,8 +40,10 @@ def tweet_method_names(method_names_and_file_paths: List[tuple], repo_name: str)
             last_tweet = tweet_method_name(method_name_and_file_path[0])
             last_tweet = tweet_repo_information(repo_name, last_tweet)
             print("\n\n*******************************************************************************************")
-            print(f"Tweet created for method \"{method_name_and_file_path[0]}\" from repo {repo_name} in filePath {method_name_and_file_path[1]}. Last tweet object: {last_tweet}")
+            print(f"Tweet created for method \"{method_name_and_file_path[0]}\" from repo {repo_name} in filePath {method_name_and_file_path[1]}")
             print("*******************************************************************************************\n\n")
             time.sleep(5)
         except Exception as e:
             print(f"Couldn't generate tweet for method {method_name_and_file_path[0]} in repo {repo_name} due to {e}")
+
+tweet_method_names([("Hello", "")], "World")

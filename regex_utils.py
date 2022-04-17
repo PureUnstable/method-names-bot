@@ -1,5 +1,5 @@
 import re
-import constants as const
+import constants
 
 __c_like_function_scope_regex__ = r"(public|private|static|protected|abstract|native|synchronized)?"
 __llvm_like_function_scope_regex__ = r"(def|fn|fun)"
@@ -22,30 +22,30 @@ c_like_regex = __c_like_function_scope_regex__ + __one_or_more_spaces__ + __func
 
 c_like_regex_function_parameter = 2
 
-def get_long_method_names_c_like(fileContents):
-    methodNames = []
+def get_long_method_names_c_like(file_contents):
+    method_names = []
     try:
-        matches = re.findall(c_like_regex, fileContents)
+        matches = re.findall(c_like_regex, file_contents)
         print(f"{len(matches)} functions")
         for match in matches:
-            if len(match[c_like_regex_function_parameter]) > const.LONG_FUNCTION_LENGTH:
-                methodNames.append(match[c_like_regex_function_parameter])
+            if len(match[c_like_regex_function_parameter]) > constants.LONG_FUNCTION_LENGTH:
+                method_names.append(match[c_like_regex_function_parameter])
     except Exception as e:
         print(f"Something went wrong with the c-like regex due to {e}")
-    return methodNames
+    return method_names
 
 
-def get_long_method_names_llvm_like(fileContents):
-    methodNames = []
+def get_long_method_names_llvm_like(file_contents):
+    method_names = []
     try:
-        matches = re.findall(llvm_like_regex, fileContents)
+        matches = re.findall(llvm_like_regex, file_contents)
         print(f"{len(matches)} function")
         for match in matches:
-            if len(match[llvm_like_regex_function_parameter]) > const.LONG_FUNCTION_LENGTH:
-                methodNames.append(match[llvm_like_regex_function_parameter])
+            if len(match[llvm_like_regex_function_parameter]) > constants.LONG_FUNCTION_LENGTH:
+                method_names.append(match[llvm_like_regex_function_parameter])
     except Exception as e:
         print(f"Something went wrong with the llvm-like regex due to {e}")
-    return methodNames
+    return method_names
 
 
 
