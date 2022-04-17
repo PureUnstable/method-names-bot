@@ -46,4 +46,5 @@ def tweet_method_names(method_names_and_file_paths: List[tuple], repo_name: str)
         except Exception as e:
             print(f"Couldn't generate tweet for method {method_name_and_file_path[0]} in repo {repo_name} due to {e}")
 
-tweet_method_names([("Hello", "")], "World")
+if __name__ == "__main__":
+    tweet_method_names([("Hello", "")], "World")
