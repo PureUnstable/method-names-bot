@@ -14,7 +14,7 @@ def main():
     try:
         while True:
             paginatedRepositories = github_api.search_github_repos(github_search_repo_query)
-            print(f"Found {paginatedRepositories.totalCount} repos found with query \"{github_search_repo_query}\"")
+            print(f"Found {paginatedRepositories.totalCount} repos with query \"{github_search_repo_query}\"")
             totalRepos = paginatedRepositories.totalCount
             currentRepo = 1
             for repo in paginatedRepositories:
