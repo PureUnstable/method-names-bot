@@ -4,7 +4,7 @@ import github_api, twitter_api
 
 # Github API
 # Ref: https://docs.github.com/en/rest/reference/search
-github_search_string = "spring"
+github_search_string = "database"
 github_search_repo_size = "size:>=20000"
 github_search_repo_filters = "sort=updated&order=desc"
 github_search_repo_query = f"{github_search_string} language:java {github_search_repo_size}" # Spaces must be used instead of "+" for the PyGithub API to work properly

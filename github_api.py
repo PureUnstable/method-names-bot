@@ -2,7 +2,7 @@ import math
 import time
 from datetime import datetime
 from typing import List
-from github import Github, RateLimitExceededException
+from github import Github, GithubException
 from github.Repository import Repository
 # from github.ContentFile import ContentFile
 # from github.PaginatedList import PaginatedList
@@ -31,7 +31,7 @@ def search_github_repos(query: str):
     try:
         paginatedRepos = g.search_repositories(query=query, sort="updated", order="desc")
         return paginatedRepos
-    except RateLimitExceededException as e:
+    except GithubException as e:
         wait_for_rate_limit_reset()
         return search_github_repos()
 
@@ -40,7 +40,7 @@ def get_folder_contents(repo: Repository, folder_path: str):
     try:
         folder_contents = repo.get_contents(folder_path)
         return folder_contents
-    except RateLimitExceededException as e:
+    except GithubException as e:
         wait_for_rate_limit_reset()
         return get_folder_contents(repo, folder_path)
 
@@ -49,7 +49,7 @@ def get_repo(repo_name: str) -> Repository:
     try:
         repo = g.get_repo(repo_name)
         return repo
-    except RateLimitExceededException as e:
+    except GithubException as e:
         wait_for_rate_limit_reset()
         return get_repo(repo_name)
 
