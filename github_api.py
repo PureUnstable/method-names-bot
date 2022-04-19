@@ -78,7 +78,7 @@ def get_folder_contents(repo: Repository, folder_name: str, folder_path: str) ->
 
 
 def is_file_parsable(file_content: ContentFile) -> bool:
-    return (file_content.name.endswith(".java") and "src/" in file_content.path)
+    return (file_content.name.endswith(".java") and "src/main/" in file_content.path)
 
 
 def get_long_method_names_from_file(file_content: ContentFile) -> List[str]:
