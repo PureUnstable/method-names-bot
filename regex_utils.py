@@ -1,3 +1,4 @@
+import logging
 import re
 import constants
 
@@ -26,12 +27,12 @@ def get_long_method_names_c_like(file_contents):
     method_names = []
     try:
         matches = re.findall(c_like_regex, file_contents)
-        print(f"{len(matches)} functions")
+        logging.info(f"{len(matches)} functions")
         for match in matches:
             if len(match[c_like_regex_function_parameter]) > constants.LONG_FUNCTION_LENGTH:
                 method_names.append(match[c_like_regex_function_parameter])
     except Exception as e:
-        print(f"Something went wrong with the c-like regex due to {e}")
+        logging.error(f"Something went wrong with the c-like regex due to {e}")
     return method_names
 
 
@@ -39,12 +40,12 @@ def get_long_method_names_llvm_like(file_contents):
     method_names = []
     try:
         matches = re.findall(llvm_like_regex, file_contents)
-        print(f"{len(matches)} function")
+        logging.info(f"{len(matches)} function")
         for match in matches:
             if len(match[llvm_like_regex_function_parameter]) > constants.LONG_FUNCTION_LENGTH:
                 method_names.append(match[llvm_like_regex_function_parameter])
     except Exception as e:
-        print(f"Something went wrong with the llvm-like regex due to {e}")
+        logging.error(f"Something went wrong with the llvm-like regex due to {e}")
     return method_names
 
 

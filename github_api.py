@@ -1,3 +1,4 @@
+import logging
 import math
 import time
 from datetime import datetime
@@ -18,9 +19,9 @@ def wait_for_rate_limit_reset():
     reset_time = g.rate_limiting_resettime + 30
     datetime_stamp = datetime.fromtimestamp(reset_time)
     sleep_seconds = math.floor(reset_time - time.time())
-    print("\n\n\n\n\n")
-    print(f"GitHub rate limit reached. Sleeping for {sleep_seconds} seconds until {datetime_stamp}")
-    print("\n\n\n\n\n")
+    logging.info("\n\n\n\n\n")
+    logging.info(f"GitHub rate limit reached. Sleeping for {sleep_seconds} seconds until {datetime_stamp}")
+    logging.info("\n\n\n\n\n")
     time.sleep(sleep_seconds)
 
 def is_exception_rate_limit_exceeded() -> bool:
@@ -31,7 +32,7 @@ def search_github_repos(query: str):
         paginatedRepos = g.search_repositories(query=query, sort="updated", order="desc")
         return paginatedRepos
     except Exception as e:
-        print(f"Exception in search_github_repos {e}")
+        logging.error(f"Exception in search_github_repos {e}")
         if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return search_github_repos()
@@ -41,11 +42,11 @@ def search_github_repos(query: str):
 
 def get_contents(repo: Repository, folder_path: str):
     try:
-        print(f"{folder_path}")
+        logging.info(f"{folder_path}")
         folder_contents = repo.get_contents(folder_path)
         return folder_contents
     except Exception as e:
-        print(f"Exception in get_contents {e}")
+        logging.error(f"Exception in get_contents {e}")
         if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return get_contents(repo, folder_path)
@@ -58,7 +59,7 @@ def get_repo(repo_name: str) -> Repository:
         repo = g.get_repo(repo_name)
         return repo
     except Exception as e:
-        print(f"Exception in get_repo {e}")
+        logging.error(f"Exception in get_repo {e}")
         if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return get_repo(repo_name)
@@ -82,11 +83,11 @@ def is_file_parsable(file_content: ContentFile) -> bool:
 
 def get_long_method_names_from_file(file_content: ContentFile) -> List[str]:
     try:
-        print(file_content.name)
+        logging.info(file_content.name)
         method_names = regex_utils.get_long_method_names_c_like(file_content.decoded_content.decode("utf-8"))
         return method_names
     except Exception as e:
-        print(f"Exception in get_long_method_names_from_file {e}")
+        logging.error(f"Exception in get_long_method_names_from_file {e}")
         if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return get_long_method_names_from_file(file_content)
@@ -116,11 +117,11 @@ def get_all_long_method_names_from_c_like_repo(repo_name: str)  -> List[tuple]:
     all_long_method_names_their_files = []
     try:
         repo = get_repo(repo_name)
-        print(f"{g.rate_limiting[0]} GitHub requests remaining")
+        logging.info(f"{g.rate_limiting[0]} GitHub requests remaining")
         contents = get_contents(repo, "")
         all_long_method_names_their_files = loop_through_repo_for_long_method_names(contents, repo)
     except Exception as e:
-        print(f"Repo {repo_name} cannot be parsed due to {e}")
+        logging.error(f"Repo {repo_name} cannot be parsed due to {e}")
     return all_long_method_names_their_files
 
 
