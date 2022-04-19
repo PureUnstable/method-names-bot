@@ -11,8 +11,10 @@ import secrets, regex_utils
 
 g = Github(secrets.GITHUB_PERSONAL_ACCESS_TOKEN)
 
+GITHUB_FILE_TOO_LARGE_MESSAGE = '"errors": [{"resource": "Blob", "field": "data", "code": "too_large"}]"'
 
-def wait_for_rate_limit_reset() -> None:
+
+def wait_for_rate_limit_reset():
     reset_time = g.rate_limiting_resettime + 30
     datetime_stamp = datetime.fromtimestamp(reset_time)
     sleep_seconds = math.floor(reset_time - time.time())
@@ -21,13 +23,16 @@ def wait_for_rate_limit_reset() -> None:
     print("\n\n\n\n\n")
     time.sleep(sleep_seconds)
 
+def is_exception_rate_limit_exceeded() -> bool:
+    return (g.rate_limiting[0] <= 0)
 
 def search_github_repos(query: str):
     try:
         paginatedRepos = g.search_repositories(query=query, sort="updated", order="desc")
         return paginatedRepos
     except Exception as e:
-        if "403" in e.__repr__():
+        print(f"Exception in search_github_repos {e}")
+        if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return search_github_repos()
         else:
@@ -40,7 +45,8 @@ def get_contents(repo: Repository, folder_path: str):
         folder_contents = repo.get_contents(folder_path)
         return folder_contents
     except Exception as e:
-        if "403" in e.__repr__():
+        print(f"Exception in get_contents {e}")
+        if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return get_contents(repo, folder_path)
         else:
@@ -52,7 +58,8 @@ def get_repo(repo_name: str) -> Repository:
         repo = g.get_repo(repo_name)
         return repo
     except Exception as e:
-        if "403" in e.__repr__():
+        print(f"Exception in get_repo {e}")
+        if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return get_repo(repo_name)
         else:
@@ -79,9 +86,14 @@ def get_long_method_names_from_file(file_content: ContentFile) -> List[str]:
         method_names = regex_utils.get_long_method_names_c_like(file_content.decoded_content.decode("utf-8"))
         return method_names
     except Exception as e:
-        if "403" in e.__repr__():
+        print(f"Exception in get_long_method_names_from_file {e}")
+        if is_exception_rate_limit_exceeded():
             wait_for_rate_limit_reset()
             return get_long_method_names_from_file(file_content)
+        elif GITHUB_FILE_TOO_LARGE_MESSAGE in repr(e):
+            # TODO: Look into calling the Git Data API for when the requested resource is >1 MB
+            # https://docs.github.com/rest/reference/repos#get-repository-content
+            return []
         else:
             raise e
 
