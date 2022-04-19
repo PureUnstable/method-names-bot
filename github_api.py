@@ -19,9 +19,7 @@ def wait_for_rate_limit_reset():
     reset_time = g.rate_limiting_resettime + 30
     datetime_stamp = datetime.fromtimestamp(reset_time)
     sleep_seconds = math.floor(reset_time - time.time())
-    logging.info("\n\n\n\n\n")
-    logging.info(f"GitHub rate limit reached. Sleeping for {sleep_seconds} seconds until {datetime_stamp}")
-    logging.info("\n\n\n\n\n")
+    logging.info(f"GitHub rate limit reached. Sleeping for {sleep_seconds} seconds until {datetime_stamp}\n\n\n\n\n")
     time.sleep(sleep_seconds)
 
 def is_exception_rate_limit_exceeded() -> bool:

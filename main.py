@@ -39,7 +39,7 @@ def main():
             currentRepo = 1
             for repo in paginatedRepositories:
                 repo_name = repo.full_name
-                logging.info(f"\n\n\n\n\nParsing repo {repo_name} -- {repo.language} -- ({currentRepo}/{totalRepos})")
+                logging.info(f"Parsing repo {repo_name} -- {repo.language} -- ({currentRepo}/{totalRepos})\n\n\n\n\n")
                 if repo.language == "Java":
                     method_names = github_api.get_all_long_method_names_from_c_like_repo(repo_name)
                     twitter_api.tweet_method_names(method_names, repo_name)

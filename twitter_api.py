@@ -39,9 +39,10 @@ def tweet_method_names(method_names: List[str], repo_name: str) -> None:
         try:
             last_tweet = tweet_method_name(method_name)
             last_tweet = tweet_repo_information(repo_name, last_tweet)
-            logging.info("\n\n*******************************************************************************************")
-            logging.info(f"Tweet created for method \"{method_name}\" from repo {repo_name}")
-            logging.info("*******************************************************************************************\n\n")
+            logging.info("\n\n*******************************************************************************************" +
+                        f"Tweet created for method \"{method_name}\" from repo {repo_name}" +
+                         "*******************************************************************************************\n\n"
+            )
         except Exception as e:
             logging.error(f"Couldn't generate tweet for method {method_name} in repo {repo_name} due to {e}")
 
