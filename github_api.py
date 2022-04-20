@@ -13,7 +13,8 @@ import secrets, regex_utils
 g = Github(secrets.GITHUB_PERSONAL_ACCESS_TOKEN)
 
 GITHUB_FILE_TOO_LARGE_MESSAGE = '"errors": [{"resource": "Blob", "field": "data", "code": "too_large"}]"'
-
+GITHUB_DENY_LIST_FOLDER_NAMES = ["image", "git", "gradle", "maven", "idea", "test", "javadoc", "resource", "script"]
+GITHUB_DENY_LIST_FOLDER_PATHS = ["docs/"]
 
 def wait_for_rate_limit_reset():
     reset_time = g.rate_limiting_resettime + 30
@@ -65,12 +66,15 @@ def get_repo(repo_name: str) -> Repository:
             raise e
 
 
-def is_folder_allow_listed(folder_path: str) -> bool:
-    return (not folder_path.startswith(".") and folder_path not in ["ci", "cd", "doc", "docs", "documentation", "images", "git", "gradle", "maven", "idea", "etc", "test", "javadoc", "resources", "scripts"])
+def is_folder_allow_listed(folder_name: str, folder_path: str) -> bool:
+    return not (folder_name.startswith(".") 
+            or any(name in folder_name for name in GITHUB_DENY_LIST_FOLDER_NAMES)
+            or any(path in folder_path for path in GITHUB_DENY_LIST_FOLDER_PATHS)
+    )
 
 
 def get_folder_contents(repo: Repository, folder_name: str, folder_path: str) -> ContentFile:
-    if is_folder_allow_listed(folder_name):
+    if is_folder_allow_listed(folder_name, folder_path):
         return get_contents(repo, folder_path)
     return None
 
