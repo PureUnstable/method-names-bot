@@ -11,7 +11,7 @@ LOGGING_FOLDER = "./logs"
 
 # Github API
 # Ref: https://docs.github.com/en/rest/reference/search
-GITHUB_SEARCH_STRING = "api"
+GITHUB_SEARCH_STRING = "interface"
 GITHUB_SEARCH_REPO_SIZE = "size:>=20000"
 GITHUB_SEARCH_REPO_FILTERS = "sort=updated&order=desc"
 GITHUB_SEARCH_REPO_QUERY = f"{GITHUB_SEARCH_STRING} language:java {GITHUB_SEARCH_REPO_SIZE}" # Spaces must be used instead of "+" for the PyGithub API to work properly

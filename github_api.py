@@ -13,7 +13,7 @@ import secrets, regex_utils
 g = Github(secrets.GITHUB_PERSONAL_ACCESS_TOKEN)
 
 GITHUB_FILE_TOO_LARGE_MESSAGE = '"errors": [{"resource": "Blob", "field": "data", "code": "too_large"}]"'
-GITHUB_DENY_LIST_FOLDER_NAMES = ["image", "git", "gradle", "maven", "idea", "test", "javadoc", "resource", "script"]
+GITHUB_DENY_LIST_FOLDER_NAMES = ["image", "git", "gradle", "maven", "idea", "test", "javadoc", "resource", "script", "node_modules"]
 GITHUB_DENY_LIST_FOLDER_PATHS = ["docs/"]
 
 def wait_for_rate_limit_reset():
